@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "linode" {
-  token = "48e19305920db79ab2eef51826a72b9c193ac7ce05527b9ce716afa9d3dce025"
+  token = ":)"
 }
 
 data "linode_sshkey" "Akamai" {
