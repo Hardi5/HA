@@ -20,6 +20,31 @@
         state: started
         enabled: yes
 
+- hosts: vm1
+  tasks:
+    - name: Copy "Hello World 1" content to NGINX index
+      copy:
+        content: |
+          <html>
+          <body>
+          <h1>Hello World 1</h1>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+
+- hosts: vm2
+  tasks:
+    - name: Copy "Hello World 2" content to NGINX index
+      copy:
+        content: |
+          <html>
+          <body>
+          <h1>Hello World 2</h1>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+
+      
 - hosts: loadbalancer
   tasks:
     - name: Configure load balancer
