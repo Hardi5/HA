@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    ansible_ssh_private_key_file: "/home/hardi/.ssh/id_rsa"
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: latest
+
+    - name: Start NGINX service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+- hosts: loadbalancer
+  tasks:
+    - name: Configure load balancer
+      blockinfile:
+        path: /etc/nginx/sites-available/default
+        block: |
+          upstream servers {
+            least_conn;
+            server 172.232.132.142;
+            server 172.232.132.209;
+          }
+
+          server {
+            listen 80;
+            server_name _;
+            
+            location / {
+              proxy_pass http://servers;
+            }
+          }
+      notify: Reload NGINX
+
+  handlers:
+    - name: Reload NGINX
+      service: 
+        name: nginx
+        state: reloaded  
